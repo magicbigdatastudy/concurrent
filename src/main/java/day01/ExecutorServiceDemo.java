@@ -17,7 +17,7 @@ public class ExecutorServiceDemo {
      * 创建而不销毁，最后内存溢出
      */
     public void create_2() {
-        ExecutorService service = Executors.newCachedThreadPool()
+        ExecutorService service = Executors.newCachedThreadPool();
     }
 
     /**
