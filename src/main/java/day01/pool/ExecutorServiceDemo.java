@@ -1,4 +1,4 @@
-package day01;
+package day01.pool;
 
 import java.util.concurrent.*;
 

@@ -1,4 +1,4 @@
-package day01;
+package day01.countdownlatch;
 
 import java.util.concurrent.CountDownLatch;
 

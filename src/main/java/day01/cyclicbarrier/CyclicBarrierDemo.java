@@ -1,4 +1,4 @@
-package day01;
+package day01.cyclicbarrier;
 
 import java.util.concurrent.CyclicBarrier;
 
