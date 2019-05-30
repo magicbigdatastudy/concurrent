@@ -24,7 +24,7 @@ public class ExecutorServiceDemo {
      * newFixedThreadPool
      * 1 都是核心线程，没有临时线程
      * 2 队列是无界队列LinkedBlockQueue
-     * 总结：池子大，大队列
+     * 总结：池子小，大队列
      * 这种线程池作用：消峰限流
      */
     public void create_3(){
