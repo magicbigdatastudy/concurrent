@@ -3,7 +3,6 @@ package day02.bio.before;
 import java.io.*;
 import java.net.ServerSocket;
 import java.net.Socket;
-
 /**
  * 目前通信模型并不能应对高并发和海量请求的场景
  * 因为会创建的大量线程，最后可能会造成服务端的内存
