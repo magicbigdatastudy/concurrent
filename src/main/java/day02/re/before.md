@@ -150,3 +150,6 @@ NIO当中，Buffer的作用就是用于数据的存储,buffer在程序的本质�
 ## NIO Socket
 ## NIO Channel
 ## Selector
+
+###### MARK 目前不熟练的知识点
+- 红黑树 [X]|||||||||              30%

@@ -5,8 +5,11 @@ import org.junit.Test;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
+import java.net.InetSocketAddress;
 import java.nio.ByteBuffer;
 import java.nio.channels.FileChannel;
+import java.nio.channels.ServerSocketChannel;
+import java.nio.channels.SocketChannel;
 
 public class FileChannelDemo  {
 
@@ -29,6 +32,41 @@ public class FileChannelDemo  {
         fc.position(4);
         fc.read(buffer);
         System.out.println(new String(buffer.array()));
+    }
+
+    public void testWrite() throws Exception{
+        SocketChannel channel = SocketChannel.open();
+        channel.connect(new InetSocketAddress("127.0.0.1",8888));
+        FileChannel fc = new FileInputStream("1.txt").getChannel();
+        //用来发送文件大小
+        ByteBuffer buffer = ByteBuffer.allocate(8);
+        buffer.asLongBuffer().put(fc.size());
+        channel.write(buffer);
+        //channel为指定的目标
+        fc.transferTo(0,fc.size(),channel);
+        fc.close();
+        channel.close();
+    }
+
+    public void testRead() throws Exception{
+        ServerSocketChannel channel = ServerSocketChannel.open();
+        channel.bind(new InetSocketAddress(8888));
+        //接收socket
+        SocketChannel sc = channel.accept();
+        FileChannel channel1 = new FileOutputStream("2.txt").getChannel();
+
+        ByteBuffer buf = ByteBuffer.allocate(8);
+        sc.read(buf);
+        buf.flip();
+
+        long fileSize = buf.getLong();
+
+        System.out.println("size"+fileSize);
+
+        channel1.transferFrom(sc,0,fileSize);
+
+        channel.close();
+        channel1.close();
     }
 
 
