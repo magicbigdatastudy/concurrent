@@ -64,14 +64,14 @@ public class PriorityBlockingQueueDemo{
     - jdk1.8的时候，为提高性能，引入了无锁算法
 在jdk1.8时候。为了提高我们的查询效率，引入了红黑树机制，如果一个桶中元素超过8个，那么这个时候，就会扭转成一个红黑树
 2. 红黑树
-1. 红黑树就一棵自平衡的二分查找树
-2. 红黑树的时间复杂度是O(log n)
-3. 红黑树的修正：右边不平衡，左旋，左边不平衡，右旋
-    1. 当前节点为红色并且父节点以及叔父节点为红色,我们要将父节点以及叔父节点涂黑。将祖父节点涂红
-    2. 当前节点为红色，并且父节点也为红色，叔父节点为黑色，另外还要满足当前节点为右子叶。我们要以当前节点进行补全
-    3. 当前节点为红，并且父节点为红，叔父节点为黑，且当前节点为左子叶。我们应该以父节点进行右旋
+    - 红黑树就一棵自平衡的二分查找树
+    - 红黑树的时间复杂度是O(log n)
+    - 红黑树的修正：右边不平衡，左旋，左边不平衡，右旋
+        1. 当前节点为红色并且父节点以及叔父节点为红色,我们要将父节点以及叔父节点涂黑。将祖父节点涂红
+        2. 当前节点为红色，并且父节点也为红色，叔父节点为黑色，另外还要满足当前节点为右子叶。我们要以当前节点进行补全
+        3. 当前节点为红，并且父节点为红，叔父节点为黑，且当前节点为左子叶。我们应该以父节点进行右旋
 ##  执行器服务
-线程池
+1. 线程池
     - 核心线程
     线程池中主要用于完成主要的工作人物，核心线程在使用完成后不会销毁
         a. 线程池开始的时候是没有核心线程的，每来一个请求就会创建一个核心线程
@@ -79,12 +79,12 @@ public class PriorityBlockingQueueDemo{
         a. 当所有线程都被占用的事情,那么后来的任务就交给我们工作队列来存储
     - 临时线程
         a. 当工作队列也存储满了，那么后来的任务就会被临时线程，来请求执行
-Callable
+2. Callable
     - Runnable和Callable的区别
         1. 有无返回值：Runnable在使用的时候不需要泛型，线程执行完以后也没有返回值,Callable接口
         在使用的时候需要定义泛型，线程执行完后有返回值
         2. 执行方式：Runnable线程可以通过构建Thread对象来启动，也可以通过线程池来启动，但是Callable只能通过线程池来启动
-        
+        3. 容错机制：Runnable线程不允许抛出异常，但是Callable线程可以抛出异常
 ```java
 public class ThreadPoolDemo{
     public static void main(String[] args){
@@ -100,9 +100,53 @@ public class ThreadPoolDemo{
              5000,
              (TimeUnit).MILLISECONDS,
              new ArrayBlockingQueue<String>(),
-             ()->System.out.println("满了")
+             (r,e)->System.out.println("满了")
       );
+      Future<String> string = es.sumbit(call);
+      System.out.println(string.get());
+     //小队列，小池子，应用场景：大量段任务场景
+     ExecutorService executorService = Executors.newFixedThreadPool(5);
+     //大队列，小池子，应用场景：不适合大量的段任务场景，适用于长任务
+     ExecutorService executorService1 = Executors.newCachedThreadPool();
     }
 }
 
+   
+class Call implements Callable<String>{
+        public void call() throws Exception{
+            return "SUCCESS";
+        }
+}
+
 ```
+## 锁
+1. CountDownLatch 闭锁/线程递减锁
+    - await方法会在计数减为0时，放开阻塞
+    - countDown来使得计数器减1
+2. CyclicBarrier 栅栏
+    - 当计数器为0时，放开await阻塞
+    - 每await一次，计数器减1
+3. Exchanger 交换机
+    - 可以交换两个线程之间的数值
+4. Semaphore 信号量
+    - 取信号量，使信号量减1
+    - 当信号量归零后，后来线程只能阻塞
+5. ReentrantLock 重入锁
+    - 可以有公平锁和非公平锁模式，默认非公平锁
+    - 使用lock加锁，unlock解锁
+## 原子性布尔
+保证属性线程的安全性
+1. AtomicInteger...
+## 缓冲区
+NIO当中，Buffer的作用就是用于数据的存储,buffer在程序的本质是一个
+数组
+1. ByteBuffer...
+    - capacity 容量位：标记缓冲区容量，定义好就不能再改变了
+    - position 操作位：标记position所能打到最大的位置
+    - limit 限制位 标记position所能打到的最大位置
+    - mark 标记位 用于进行标记，可以认定之前的数据没有问题，另外需要注意，在缓冲区中没有主动启动，默认值是-1
+
+## BIO Socket
+## NIO Socket
+## NIO Channel
+## Selector
