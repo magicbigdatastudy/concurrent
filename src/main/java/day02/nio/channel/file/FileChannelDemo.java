@@ -24,6 +24,9 @@ public class FileChannelDemo  {
     public void read() throws Exception{
         FileChannel fc = new FileInputStream(new File("1.txt")).getChannel();
         ByteBuffer buffer = ByteBuffer.allocate(10);
+        //-- 文件通道可以通过位置灵活的操作数据
+        //-- 文件通道底层可以使用zero copy技术
+        fc.position(4);
         fc.read(buffer);
         System.out.println(new String(buffer.array()));
     }
